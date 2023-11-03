@@ -15,7 +15,7 @@ def text_overlay():
     screen.text(85,190,"2023")
 
 def back(key):
-    screen.jpg("pl_mars.jpg")#("bluemarble.jpg")   # button A globe
+    screen.jpg("wave2d_dummy.jpg")#("bluemarble.jpg")   # button A globe
     text_overlay()
     
 def fwd(key):
