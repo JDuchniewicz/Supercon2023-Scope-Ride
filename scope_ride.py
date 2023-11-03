@@ -2,6 +2,8 @@ from vectorscope import Vectorscope
 from dds import DDS
 
 import gc
+import math
+import time
 from vos_debug import debug_print as debug
 import vectoros
 import vos_state
@@ -47,99 +49,25 @@ async def vos_main():
     keyboardio.KeyboardIO.scan()
 
     v = Vectorscope()
-    d = DDS(v)
-    d.increment = [1500, 1200]
-    d.amplitude=[0.5, 0.5]
-    d.recalculate_waveforms()
 
-    def toggle_xy(key):
-        ## not right yet
-        global lissajous_state
-        global d
-        if lissajous_state["selected_axis"] == 0:
-            lissajous_state["selected_axis"] = 1
-            keyboardio.KeyboardIO.leds |= (1<<6)
-            keyboardio.KeyboardIO.leds &= ~(1<<7)
-        else:
-            lissajous_state["selected_axis"] = 0
-            keyboardio.KeyboardIO.leds |= (1<<7)
-            keyboardio.KeyboardIO.leds &= ~(1<<6)
-        
-        ## Update leds to reflect switch
-        keyboardio.KeyboardIO.leds &= (0b11000011)
-        which_led = lissajous_state["waves_leds"][lissajous_state["selected_axis"]] 
-        keyboardio.KeyboardIO.leds |= (1<<(5-which_led))
+    def static_buffer_example(v):
+        ## Example of more complicated, repetitive waveform
+        ## v.wave has two buffers of 256 samples for putting sample-wise data into: 
+        ## v.wave.outBufferX and outBufferY.  These are packed 16 bits each, LSB first
+        ## To make your life easier, v.wave.packX() will put a list of 16-bit ints there for you
 
-    def toggle_waveform(key):
-        global lissajous_state
-        which_led = lissajous_state["waves_leds"][lissajous_state["selected_axis"]] 
-        ## clear leds
-        keyboardio.KeyboardIO.leds &= (0b11000011)
-        ## update led
-        which_led = ( which_led + 1) % 4 
-        keyboardio.KeyboardIO.leds |= (1<<(5-which_led ))
-        ## update storage
-        lissajous_state["waves_leds"][lissajous_state["selected_axis"]] = which_led
-        ## update waveform
-        d.waveform[lissajous_state["selected_axis"]] = _waves_lookup[which_led]
-        d.recalculate_waveforms()
-        
-    def handle_joystick_up(key):
-        current_keys = keyboardcb.KeyboardCB.current_keys
-        if len(current_keys) == 1: ## just joystick
-            d.increment[1] = int(d.increment[1] * 1.1)
-        if keyleds.KEY_RANGE in current_keys:
-            d.amplitude[1] = d.amplitude[1] * 1.1
-            d.recalculate_waveforms()
-            ## increase amplitude Y
-        if keyleds.KEY_LEVEL in current_keys:
-            d.phase_increment[1] = d.phase_increment[1] + 1
-            ## increase phase Y
-        
-    def handle_joystick_down(key):
-        current_keys = keyboardcb.KeyboardCB.current_keys
-        if len(current_keys) == 1: ## just joystick
-            d.increment[1] = int(d.increment[1] * 0.91)
-        if keyleds.KEY_RANGE in current_keys:
-            d.amplitude[1] = d.amplitude[1] * 0.91
-            d.recalculate_waveforms()
-            ## increase amplitude Y
-        if keyleds.KEY_LEVEL in current_keys:
-            d.phase_increment[1] = d.phase_increment[1] - 1
-            ## increase phase Y
-    def handle_joystick_right(key):
-        current_keys = keyboardcb.KeyboardCB.current_keys
-        if len(current_keys) == 1: ## just joystick
-            d.increment[0] = int(d.increment[0] * 1.1)
-        if keyleds.KEY_RANGE in current_keys:
-            d.amplitude[0] = d.amplitude[0] * 1.1
-            d.recalculate_waveforms()
-            ## increase amplitude Y
-        if keyleds.KEY_LEVEL in current_keys:
-            d.phase_increment[0] = d.phase_increment[0] + 1
-            ## increase phase Y
-        
-    def handle_joystick_left(key):
-        current_keys = keyboardcb.KeyboardCB.current_keys
-        if len(current_keys) == 1: ## just joystick
-            d.increment[0] = int(d.increment[0] * 0.91)
-        if keyleds.KEY_RANGE in current_keys:
-            d.amplitude[0] = d.amplitude[0] * 0.91
-            d.recalculate_waveforms()
-            ## increase amplitude X
-        if keyleds.KEY_LEVEL in current_keys:
-            d.phase_increment[0] = d.phase_increment[0] - 1
-            ## increase phase X
+        ramp = range(-2**15, 2**15, 2**8)
+        v.wave.packX(ramp)
 
-    mykeys=keyboardcb.KeyboardCB({keyleds.KEY_MENU: do_abort, 
-                                  keyleds.KEY_XY:toggle_xy,
-                                  keyleds.KEY_WAVE: toggle_waveform,
-                                  keyleds.JOY_UP: handle_joystick_up,
-                                  keyleds.JOY_DN: handle_joystick_down,
-                                  keyleds.JOY_RT: handle_joystick_right,
-                                  keyleds.JOY_LT: handle_joystick_left
-                                  })
-    await do_dds_loop(d)
+        sine = [int(math.sin(2*x*math.pi/256)*16_000) for x in range(256)]
+        v.wave.packY(sine)
+
+        time.sleep_ms(1000)
+
+        ## That discontinuity and wobble is real -- 
+        ##  that's what happens when you try to push around a real DAC that's bandwidth-limited.
+
+    await static_buffer_example(v)
     
     vectoros.reset()
 
