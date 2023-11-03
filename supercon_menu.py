@@ -22,9 +22,9 @@ def planets(arg):
 def menu_custom(the_menu):
     if the_menu.level==1:
         if machine.Pin(22).value():
-            the_menu.current[2]=[" Sound Off",toggle_sound,0]
+            the_menu.current[2]=[" Sound SrOff",toggle_sound,0]
         else:
-            the_menu.current[2]=[" Sound On",toggle_sound,1]
+            the_menu.current[2]=[" Sound SrOn",toggle_sound,1]
 
 def toggle_sound(arg):
     ## toggle sound here
@@ -83,10 +83,10 @@ async def vos_main():
                   cursor_bg=colors.PHOSPHOR_BG, cursor_fg=colors.PHOSPHOR_BRIGHT) as amenu:  
             ## name in menu, command to run, return value?
             submenu=[["  Planets", planets, 0],["  Sketch",runsketch,0],["  Back",m_exit,None]]
-            mainmenu=[[" Lissajous", run_lissajous,None],
+            mainmenu=[[" SriLissajous", run_lissajous,None],
                       [" Demos", SUBMENU, submenu] ,
+                      [" Sound", toggle_sound, None],
                       [" ScopeRide", run_scope_ride, None],
-                      #[" Sound", toggle_sound, None],
                       [" Reboot",reboot,False],
                       ]
 
