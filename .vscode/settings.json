@@ -10,5 +10,7 @@
     ],
     "python.analysis.extraPaths": [
         ".vscode/Pico-W-Stub"
-    ]
+    ],
+    "micropico.syncFolder": "",
+    "micropico.openOnStart": true
 }

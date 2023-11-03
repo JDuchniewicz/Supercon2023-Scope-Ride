@@ -39,6 +39,12 @@ def run_lissajous(arg):
     # we never come back, vectorscope
     return EXIT
 
+def run_scope_ride(arg):
+    vos_state.show_menu=False
+    vectoros.launch_task('scope_ride')
+    # never come back
+    return EXIT
+
 def reboot(arg):
     if arg==False:
         vectoros.reset()
@@ -79,7 +85,8 @@ async def vos_main():
             submenu=[["  Planets", planets, 0],["  Sketch",runsketch,0],["  Back",m_exit,None]]
             mainmenu=[[" Lissajous", run_lissajous,None],
                       [" Demos", SUBMENU, submenu] ,
-                      [" Sound", toggle_sound, None],
+                      [" ScopeRide", run_scope_ride, None],
+                      #[" Sound", toggle_sound, None],
                       [" Reboot",reboot,False],
                       ]
 
