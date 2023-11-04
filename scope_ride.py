@@ -13,9 +13,15 @@ surfer_position_x=0
 surfer_position_y=0
 game_score=0
 
+from buzzer_music import music
+
+#    https://onlinesequencer.net/1140127 C418 - Sweden
+song = '64 E3 4 13;64 E4 4 13;64 G4 4 13;64 B4 4 13;68 F#3 4 13;76 B3 4 13;80 A3 4 13;84 G3 4 13;88 D3 4 13;72 D5 4 13;72 A4 4 13;72 F#5 4 13;72 G3 4 13;80 F#4 4 13;80 A4 4 13;80 C#5 4 13;88 A4 4 13;88 C#5 4 13;88 E5 4 13;96 E3 4 13;96 E4 4 13;96 G4 4 13;96 B4 4 13;100 F#3 4 13;108 B3 4 13;112 A3 4 13;116 G3 4 13;120 D3 4 13;104 D5 4 13;104 A4 4 13;104 F#5 4 13;104 G3 4 13;112 F#4 4 13;112 A4 4 13;112 C#5 4 13;120 A4 4 13;120 C#5 4 13;120 E5 4 13;0 E3 4 13;4 F#3 4 13;12 B3 4 13;16 A3 4 13;20 G3 4 13;24 D3 4 13;8 G3 4 13;32 E3 4 13;36 F#3 4 13;44 B3 4 13;48 A3 4 13;52 G3 4 13;56 D3 4 13;40 G3 4 13;0 E4 4 13;0 G4 4 13;8 A4 4 13;8 D5 4 13;16 A4 4 13;16 F#4 4 13;24 A4 4 13;24 C#5 4 13;32 E4 4 13;32 G4 4 13;40 A4 4 13;40 D5 4 13;48 A4 4 13;48 F#4 4 13;56 A4 4 13;56 C#5 4 13;128 E3 4 13;128 E4 4 13;128 G4 4 13;128 B4 4 13;132 F#3 4 13;140 B3 4 13;144 A3 4 13;148 G3 4 13;152 D3 4 13;136 D5 4 13;136 A4 4 13;136 F#5 4 13;136 G3 4 13;144 F#4 4 13;144 A4 4 13;144 C#5 4 13;152 A4 4 13;152 C#5 4 13;152 E5 4 13;132 A5 2 13;134 B5 2 13;142 D5 1 13;143 E5 1 13;150 F#5 1 13;151 A5 1 13;160 E3 4 13;160 E4 2 13;160 G4 2 13;160 B4 2 13;164 F#3 4 13;172 B3 4 13;176 A3 4 13;180 G3 4 13;184 D3 4 13;168 D5 4 13;168 A4 4 13;168 F#5 4 13;168 G3 4 13;176 F#4 4 13;176 A4 4 13;176 C#5 4 13;184 A4 4 13;184 C#5 4 13;184 E5 4 13;162 D6 2 13;164 B5 2 13;166 A5 2 13;174 D5 1 13;175 E5 1 13;182 A5 1 13;183 F#5 1 13'
+
 # buzzer is connected to one of ADC inputs - trigger it
 buzzer_enabler = machine.Pin(22, machine.Pin.OUT, 1)
-buzzer_gpio = machine.Pin(26, machine.Pin.OUT)
+mySong = music(song, pins=[machine.Pin(26)])
+#buzzer_gpio = machine.Pin(26, machine.Pin.OUT)
 
 exit_flag=False
 
@@ -127,7 +133,8 @@ async def vos_main():
         # draw from back to front
         draw_wave()
         draw_surfer()
-        buzzer_gpio.on()
+        #buzzer_gpio.on()
+        mySong.tick()
 
         await asyncio.sleep_ms(500)
         if vectoros.vectoros_active==False:
