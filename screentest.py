@@ -10,13 +10,25 @@ screen=screennorm.ScreenNorm()
 
 exit_flag=False
 
-def text_overlay():
-    screen.text(60,25,"Wave rider")
-    screen.text(85,190,"2023")
+def text_overlay(text="Wave rider", off=0):
+    screen.text(40,25, text)
+    screen.text(85,190+off,"2023")
 
 def back(key):
-    screen.jpg("wave2d_dummy.jpg")#("bluemarble.jpg")   # button A globe
-    text_overlay()
+    #screen.jpg("pl_mars.jpg")#("bluemarble.jpg")   # button A globe
+    #text_overlay("Wave rider")
+    #return
+    i = 0
+    inc = 1
+    while True:
+        screen.jpg("wave2d_dummy.jpg")#("bluemarble.jpg")   # button A globe
+        if i >= 10:
+            inc = -1
+        elif i <= -10:
+            inc = +1
+        i += inc
+        text_overlay("Wave rider",i)
+        asyncio.sleep_ms(2)
     
 def fwd(key):
     screen.jpg("pl_earth.jpg")#"wrencher.jpg")      # button B wrencher
@@ -44,6 +56,7 @@ async def vos_main():
     while exit_flag==False:
         await asyncio.sleep_ms(500)
         if vectoros.vectoros_active==False:
+            print("Siki")
             gc.collect()
 # stop listening for keys
     keys.detach()
