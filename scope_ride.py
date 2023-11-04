@@ -1,3 +1,4 @@
+import machine
 import screennorm
 import keyboardcb
 import keyleds
@@ -12,6 +13,9 @@ surfer_position_x=0
 surfer_position_y=0
 game_score=0
 
+# buzzer is connected to one of ADC inputs - trigger it
+buzzer_enabler = machine.Pin(22, machine.Pin.OUT, 1)
+buzzer_gpio = machine.Pin(26, machine.Pin.OUT)
 
 exit_flag=False
 
@@ -123,6 +127,7 @@ async def vos_main():
         # draw from back to front
         draw_wave()
         draw_surfer()
+        buzzer_gpio.on()
 
         await asyncio.sleep_ms(500)
         if vectoros.vectoros_active==False:
