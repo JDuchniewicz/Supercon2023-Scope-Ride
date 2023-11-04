@@ -11,7 +11,7 @@ else:
     #import vectorscope
     #v = vectorscope.Vectorscope()
     print("Kupa")
-    from screentest import *
+    from scope_ride import *
     keyboardcb.KeyboardCB.run(100)
     main()
 

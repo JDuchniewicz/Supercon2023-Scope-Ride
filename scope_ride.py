@@ -1,76 +1,73 @@
-from vectorscope import Vectorscope
-from dds import DDS
-
-import gc
-import math
-import time
-from vos_debug import debug_print as debug
-import vectoros
-import vos_state
-import vos_debug
+import screennorm
 import keyboardcb
 import keyleds
-import keyboardio
+import vectoros
+import gc
 import asyncio
 
-_abort=False
-## map waveform types to LEDs
-_waves_lookup = {0:"sine", 3:"sawtooth", 1:"square", 2:"triangle"}
-_waves_reverse_lookup = {"sine":0, "sawtooth":3, "square":1, "triangle":2}
+screen=screennorm.ScreenNorm() 
 
-lissajous_state = {
-        "selected_axis":0, 
-        "selected_waveform":0,
-        "waves_leds":[0,0]
 
-        }
+exit_flag=False
 
-async def do_dds_loop(d):
-    while not _abort:
-        for i in range(50):
-            d.do_dds()
-            d.populate_buffer()
-            await asyncio.sleep(0)
+def text_overlay():
+    screen.text(80,25,"Jakub")
+    screen.text(40,160,"Duchniewicz")
+
+def back(key):
+    #screen.jpg("wave2d_dummy.jpg")#("bluemarble.jpg")   # button A globe
+    screen.jpg("sticky_piston_studios_logo.jpg")#("bluemarble.jpg")   # button A globe
+    text_overlay()
     
-def do_abort(key):
-    global _abort
-    _abort=True
+def fwd(key):
+    screen.jpg("pl_earth.jpg")#"wrencher.jpg")      # button B wrencher
+    text_overlay()
+    
+def menu(key):						# menu -bail out
+    global exit_flag
+    exit_flag=True
 
+def startlcd(key):					# button D - start LCD
+    if screen.tft==None:
+        screen.wake()
+        back(None)
+
+def stoplcd(key):					# button C stop LCD
+    if screen.tft!=None:
+        screen.clear()
+        screen.idle()
+
+def draw_bg():
+    pass
+
+def draw_surfer():
+    pass
+
+def draw_wave():
+    pass
 
 async def vos_main():
-
-    vectoros.get_screen().idle()
-    gc.collect()
-    vos_state.gc_suspend=True
-    # await asyncio.sleep(1)
+    ## we need a main loop here - buttons still work as interrupts
+    # put SPS logo with our names
+    ## Main logic of movement and wave animation
+    global exit_flag
+    keys=keyboardcb.KeyboardCB({keyleds.KEY_A: back, keyleds.KEY_B: fwd, keyleds.KEY_C: stoplcd, keyleds.KEY_D: startlcd,
+                                keyleds.KEY_MENU: menu})
+    back(None)
+    while exit_flag==False:
+        await asyncio.sleep_ms(500)
+        if vectoros.vectoros_active==False:
+            gc.collect()
+# stop listening for keys
+    keys.detach()
+    exit_flag=False  # next time
+    from vos_state import vos_state
+    vos_state.show_menu=True
     
-    keyboardio.KeyboardIO.leds = (1<<7) 
-    keyboardio.KeyboardIO.leds |= (1<<5) ## sine wave
-    keyboardio.KeyboardIO.scan()
-
-    v = Vectorscope()
-
-    def static_buffer_example(v):
-        ## Example of more complicated, repetitive waveform
-        ## v.wave has two buffers of 256 samples for putting sample-wise data into: 
-        ## v.wave.outBufferX and outBufferY.  These are packed 16 bits each, LSB first
-        ## To make your life easier, v.wave.packX() will put a list of 16-bit ints there for you
-
-        ramp = range(-2**15, 2**15, 2**8)
-        v.wave.packX(ramp)
-
-        #sine = [int(math.sin(2*x*math.pi/256)*16_000) for x in range(256)]
-        sawtooth = [x for x in range(256)]
-        v.wave.packY(sawtooth)
-
-        time.sleep_ms(1000)
-
-        ## That discontinuity and wobble is real -- 
-        ##  that's what happens when you try to push around a real DAC that's bandwidth-limited.
-
-    await static_buffer_example(v)
-    
-    vectoros.reset()
+def main():
+    asyncio.run(vos_main())
 
 
-
+if __name__=="__main__":
+    keyboardcb.KeyboardCB.run(100)
+    main()
