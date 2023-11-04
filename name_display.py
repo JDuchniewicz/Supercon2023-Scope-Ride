@@ -15,8 +15,15 @@ def text_overlay():
     screen.text(40,160,"Duchniewicz")
 
 def back(key):
-    screen.jpg("sticky_piston_studios_logo.jpg")  # button A globe
-    text_overlay()
+    idx = 1
+    while True:
+        if idx >= 11:
+            idx = 1
+        path = "img/sps_" + str(idx) + ".jpg"
+        screen.jpg(path)  # button A globe
+        #text_overlay()
+        idx += 1
+        asyncio.sleep_ms(20)
     
 def menu(key):						# menu -bail out
     global exit_flag

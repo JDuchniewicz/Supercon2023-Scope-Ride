@@ -16,7 +16,7 @@ game_score=0
 exit_flag=False
 
 def text_overlay():
-    screen.text(80,25,"Jakub")
+    screen.text(80,25,"Szymon")
     screen.text(40,160,"Duchniewicz")
 
 def back(key):
