@@ -123,3 +123,9 @@ class ScreenNorm:
         
         if self.tft!=None:
              self.tft.pixel(x,y,color)
+
+    # TODO: add blitting here
+    def jpg_pos(self,filename,x,y):
+        if self.tft!=None:
+            gc.collect()   
+            self.tft.jpg(filename,x,y,1)
