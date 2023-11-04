@@ -45,6 +45,12 @@ def run_scope_ride(arg):
     # never come back
     return EXIT
 
+def run_name_display(arg):
+    vos_state.show_menu=False
+    vectoros.launch_task('name_display')
+    # never come back
+    return EXIT
+
 def reboot(arg):
     if arg==False:
         vectoros.reset()
@@ -84,6 +90,7 @@ async def vos_main():
             ## name in menu, command to run, return value?
             submenu=[["  Planets", planets, 0],["  Sketch",runsketch,0],["  Back",m_exit,None]]
             mainmenu=[[" SriLissajous", run_lissajous,None],
+                      [" Name", run_name_display, None],
                       [" Demos", SUBMENU, submenu] ,
                       [" Sound", toggle_sound, None],
                       [" ScopeRide", run_scope_ride, None],

@@ -1,7 +1,7 @@
 # list of things to launch from vectoros
 
 # dictionary of tags to imports (will look for .vos_main() or .main() here) 
-launch_list={ "menu": "supercon_menu", 'sketch': 'sketch', "demo": "examples", "planets":"planets", "lissajous":"lissajous", "scope_ride":"scope_ride"}
+launch_list={ "menu": "supercon_menu", 'sketch': 'sketch', "demo": "examples", "planets":"planets", "lissajous":"lissajous", "scope_ride":"scope_ride", "name_display":"name_display"}
 
 # list what you want to start auto (maybe just one thing?) need tag
 auto_launch_list=["menu"]
