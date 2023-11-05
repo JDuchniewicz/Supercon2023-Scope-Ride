@@ -101,15 +101,12 @@ def draw_bg():
     screen.jpg(path)
     bg_scroll_position += 1
     # Wrap back around if beyond the last parallax image!
-    if bg_scroll_position > 10:
+    if bg_scroll_position > 62:
         bg_scroll_position = 0
 
 def draw_surfer():
     # draw the surfer in the middle of the screen adjusted by their position
     print("Drawing the surfer")
-    print(gc.mem_free())
-    gc.collect()
-    print(gc.mem_free())
     screen.tft.bitmap(surfer_bitmap, 120+surfer_position_x*5, 120-surfer_position_y*5)
     #screen.tft.bitmap(SURFER_BITMAP, 120+surfer_position_x*5, 120-surfer_position_y*5)
     #screen.jpg_pos("surfer.jpg", 120+surfer_position_x*5, 120-surfer_position_y*5) 
