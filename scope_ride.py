@@ -139,7 +139,8 @@ def lost_loop():
     else:
         countdown_to_start -= 1
 
-    screen.text_font(None,40,120,"You lost! Score: {0}".format(old_game_score),fg_color=gc9a01.color565(255, 255, 255), scale=1.0)
+    screen.text_font(None,30,120,"You lost! Score: {0}".format(old_game_score),fg_color=gc9a01.color565(255, 255, 255), scale=0.7)
+    screen.text_font(None,30,140,"Restarting in: {0}".format(countdown_to_start),fg_color=gc9a01.color565(255, 255, 255), scale=0.7)
 
 
 # TODO: can add several life and loosing them one by one
@@ -173,7 +174,7 @@ def draw_bg():
 
 def draw_score():
     global game_score
-    screen.text_font(None,40,200,"Score: {0}".format(game_score),fg_color=gc9a01.color565(0, 0, 0), scale=0.5)
+    screen.text_font(None,40,200,"Score: {0}".format(game_score),fg_color=gc9a01.color565(255, 255, 255), scale=0.5)
 
 def draw_surfer():
     # draw the surfer in the middle of the screen adjusted by their position
