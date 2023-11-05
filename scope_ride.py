@@ -17,6 +17,7 @@ surfer_position_x=0
 surfer_position_y=0
 game_score=0
 lost_life = False
+bg_scroll_position=0
 
 from buzzer_music import music
 
@@ -94,12 +95,21 @@ def restart():
     lost_life = False
 
 def draw_bg():
-    # draw the parallax background 
-    pass
+    # draw the parallax background
+    global bg_scroll_position
+    path = "img/background/" + str(bg_scroll_position) + ".jpg"
+    screen.jpg(path)
+    bg_scroll_position += 1
+    # Wrap back around if beyond the last parallax image!
+    if bg_scroll_position > 10:
+        bg_scroll_position = 0
 
 def draw_surfer():
     # draw the surfer in the middle of the screen adjusted by their position
     print("Drawing the surfer")
+    print(gc.mem_free())
+    gc.collect()
+    print(gc.mem_free())
     screen.tft.bitmap(surfer_bitmap, 120+surfer_position_x*5, 120-surfer_position_y*5)
     #screen.tft.bitmap(SURFER_BITMAP, 120+surfer_position_x*5, 120-surfer_position_y*5)
     #screen.jpg_pos("surfer.jpg", 120+surfer_position_x*5, 120-surfer_position_y*5) 
@@ -168,7 +178,8 @@ async def vos_main():
     while exit_flag==False:
 
         # draw from back to front
-        draw_wave()
+        draw_bg()
+        #draw_wave()
         draw_surfer()
         s = os.statvfs('/')
         print(f"Free storage: {s[0]*s[3]/1024} KB")
