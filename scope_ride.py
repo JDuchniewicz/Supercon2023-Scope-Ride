@@ -12,15 +12,20 @@ screen=screennorm.ScreenNorm()
 surfer_position_x=0
 surfer_position_y=0
 game_score=0
+lost_life = False
 
 from buzzer_music import music
 
+# TODO: replace with surfing USA and make it slightly less loud
+# add mute button
 #    https://onlinesequencer.net/1140127 C418 - Sweden
-song = '64 E3 4 13;64 E4 4 13;64 G4 4 13;64 B4 4 13;68 F#3 4 13;76 B3 4 13;80 A3 4 13;84 G3 4 13;88 D3 4 13;72 D5 4 13;72 A4 4 13;72 F#5 4 13;72 G3 4 13;80 F#4 4 13;80 A4 4 13;80 C#5 4 13;88 A4 4 13;88 C#5 4 13;88 E5 4 13;96 E3 4 13;96 E4 4 13;96 G4 4 13;96 B4 4 13;100 F#3 4 13;108 B3 4 13;112 A3 4 13;116 G3 4 13;120 D3 4 13;104 D5 4 13;104 A4 4 13;104 F#5 4 13;104 G3 4 13;112 F#4 4 13;112 A4 4 13;112 C#5 4 13;120 A4 4 13;120 C#5 4 13;120 E5 4 13;0 E3 4 13;4 F#3 4 13;12 B3 4 13;16 A3 4 13;20 G3 4 13;24 D3 4 13;8 G3 4 13;32 E3 4 13;36 F#3 4 13;44 B3 4 13;48 A3 4 13;52 G3 4 13;56 D3 4 13;40 G3 4 13;0 E4 4 13;0 G4 4 13;8 A4 4 13;8 D5 4 13;16 A4 4 13;16 F#4 4 13;24 A4 4 13;24 C#5 4 13;32 E4 4 13;32 G4 4 13;40 A4 4 13;40 D5 4 13;48 A4 4 13;48 F#4 4 13;56 A4 4 13;56 C#5 4 13;128 E3 4 13;128 E4 4 13;128 G4 4 13;128 B4 4 13;132 F#3 4 13;140 B3 4 13;144 A3 4 13;148 G3 4 13;152 D3 4 13;136 D5 4 13;136 A4 4 13;136 F#5 4 13;136 G3 4 13;144 F#4 4 13;144 A4 4 13;144 C#5 4 13;152 A4 4 13;152 C#5 4 13;152 E5 4 13;132 A5 2 13;134 B5 2 13;142 D5 1 13;143 E5 1 13;150 F#5 1 13;151 A5 1 13;160 E3 4 13;160 E4 2 13;160 G4 2 13;160 B4 2 13;164 F#3 4 13;172 B3 4 13;176 A3 4 13;180 G3 4 13;184 D3 4 13;168 D5 4 13;168 A4 4 13;168 F#5 4 13;168 G3 4 13;176 F#4 4 13;176 A4 4 13;176 C#5 4 13;184 A4 4 13;184 C#5 4 13;184 E5 4 13;162 D6 2 13;164 B5 2 13;166 A5 2 13;174 D5 1 13;175 E5 1 13;182 A5 1 13;183 F#5 1 13'
+surfing_song = '64 E3 4 13;64 E4 4 13;64 G4 4 13;64 B4 4 13;68 F#3 4 13;76 B3 4 13;80 A3 4 13;84 G3 4 13;88 D3 4 13;72 D5 4 13;72 A4 4 13;72 F#5 4 13;72 G3 4 13;80 F#4 4 13;80 A4 4 13;80 C#5 4 13;88 A4 4 13;88 C#5 4 13;88 E5 4 13;96 E3 4 13;96 E4 4 13;96 G4 4 13;96 B4 4 13;100 F#3 4 13;108 B3 4 13;112 A3 4 13;116 G3 4 13;120 D3 4 13;104 D5 4 13;104 A4 4 13;104 F#5 4 13;104 G3 4 13;112 F#4 4 13;112 A4 4 13;112 C#5 4 13;120 A4 4 13;120 C#5 4 13;120 E5 4 13;0 E3 4 13;4 F#3 4 13;12 B3 4 13;16 A3 4 13;20 G3 4 13;24 D3 4 13;8 G3 4 13;32 E3 4 13;36 F#3 4 13;44 B3 4 13;48 A3 4 13;52 G3 4 13;56 D3 4 13;40 G3 4 13;0 E4 4 13;0 G4 4 13;8 A4 4 13;8 D5 4 13;16 A4 4 13;16 F#4 4 13;24 A4 4 13;24 C#5 4 13;32 E4 4 13;32 G4 4 13;40 A4 4 13;40 D5 4 13;48 A4 4 13;48 F#4 4 13;56 A4 4 13;56 C#5 4 13;128 E3 4 13;128 E4 4 13;128 G4 4 13;128 B4 4 13;132 F#3 4 13;140 B3 4 13;144 A3 4 13;148 G3 4 13;152 D3 4 13;136 D5 4 13;136 A4 4 13;136 F#5 4 13;136 G3 4 13;144 F#4 4 13;144 A4 4 13;144 C#5 4 13;152 A4 4 13;152 C#5 4 13;152 E5 4 13;132 A5 2 13;134 B5 2 13;142 D5 1 13;143 E5 1 13;150 F#5 1 13;151 A5 1 13;160 E3 4 13;160 E4 2 13;160 G4 2 13;160 B4 2 13;164 F#3 4 13;172 B3 4 13;176 A3 4 13;180 G3 4 13;184 D3 4 13;168 D5 4 13;168 A4 4 13;168 F#5 4 13;168 G3 4 13;176 F#4 4 13;176 A4 4 13;176 C#5 4 13;184 A4 4 13;184 C#5 4 13;184 E5 4 13;162 D6 2 13;164 B5 2 13;166 A5 2 13;174 D5 1 13;175 E5 1 13;182 A5 1 13;183 F#5 1 13'
+#sad_trumpet_song = 
 
 # buzzer is connected to one of ADC inputs - trigger it
 buzzer_enabler = machine.Pin(22, machine.Pin.OUT, 1)
-mySong = music(song, pins=[machine.Pin(26)])
+surfing_music = music(surfing_song, pins=[machine.Pin(26)])
+#sad_trumpet_music
 #buzzer_gpio = machine.Pin(26, machine.Pin.OUT)
 
 exit_flag=False
@@ -34,9 +39,9 @@ def back(key):
     #screen.jpg("sticky_piston_studios_logo.jpg")#("bluemarble.jpg")   # button A globe
     #text_overlay()
     
-def fwd(key):
-    screen.jpg("pl_earth.jpg")#"wrencher.jpg")      # button B wrencher
-    text_overlay()
+def handle_restart(key):
+    print("Restart pressed")
+    restart()
     
 def menu(key):						# menu -bail out
     global exit_flag
@@ -62,6 +67,16 @@ def game_loop():
     # 
     pass
 
+# TODO: can add several life and loosing them one by one
+def loose():
+    # play loosing sound
+    surfing_music.stop()
+    lost_life = True
+    
+def restart():
+    surfing_music.restart()
+    lost_life = False
+
 def draw_bg():
     # draw the parallax background 
     pass
@@ -83,6 +98,7 @@ def handle_joystick_up(key):
     # get too high, also loose
     if surfer_position_y > 3:
         print("Too high, you lose")
+        loose()
     else:
         surfer_position_y += 1
 
@@ -91,6 +107,7 @@ def handle_joystick_down(key):
     # ditto
     if surfer_position_y < -3:
         print("Too low, you lose")
+        loose()
     else:
         surfer_position_y -= 1
 
@@ -99,6 +116,7 @@ def handle_joystick_right(key):
     # if too far right then you drop off the wave and lose
     if surfer_position_x > 3:
         print("Too far off, you lost the wave")
+        loose()
     else:
         surfer_position_x += 1
 
@@ -108,6 +126,7 @@ def handle_joystick_left(key):
     # animation of wave progressing and beep from the beeper
     if surfer_position_x < -3:
         print("Wave got you, you lose")
+        loose()
     else:
         surfer_position_x -= 1
 
@@ -117,7 +136,7 @@ async def vos_main():
     ## Main logic of movement and wave animation
     global exit_flag
     keys=keyboardcb.KeyboardCB({keyleds.KEY_A: back,
-                                keyleds.KEY_B: fwd,
+                                keyleds.KEY_B: handle_restart,
                                 keyleds.KEY_C: stoplcd, 
                                 keyleds.KEY_D: startlcd,
                                 keyleds.KEY_MENU: menu,
@@ -134,7 +153,10 @@ async def vos_main():
         draw_wave()
         draw_surfer()
         #buzzer_gpio.on()
-        mySong.tick()
+        if lost_life:
+            sad_trumpet_music.tick()
+        else:
+            surfing_music.tick()
 
         await asyncio.sleep_ms(500)
         if vectoros.vectoros_active==False:
