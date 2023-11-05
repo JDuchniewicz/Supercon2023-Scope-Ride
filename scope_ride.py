@@ -174,7 +174,7 @@ def draw_bg():
 
 def draw_score():
     global game_score
-    screen.text_font(None,40,200,"Score: {0}".format(game_score),fg_color=gc9a01.color565(255, 255, 255), scale=0.5)
+    screen.text_font(None,60,20,"Score: {0}".format(game_score),fg_color=gc9a01.color565(255, 255, 255), scale=0.5)
 
 def draw_surfer():
     # draw the surfer in the middle of the screen adjusted by their position
