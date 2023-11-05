@@ -8,9 +8,8 @@ import asyncio
 #from img_bitmaps import SURFER_BITMAP
 import surfer_bitmap
 import wave_bitmap
-import framebuf
 import gc9a01
-import random
+from random import randint
 
 screen: screennorm.ScreenNorm =screennorm.ScreenNorm() 
 
@@ -22,6 +21,8 @@ old_game_score=0
 lost_life = False
 bg_scroll_position=0
 countdown_to_start = 5
+wave_position_base_x=20
+wave_position_offset_x=0
 
 from buzzer_music import music
 
@@ -93,8 +94,8 @@ def game_loop():
     # 10% chance you get thrown down 2
     # 10% chance you get thrown up 1
 
-    x_movement_prob = random.randrange(0, 10)
-    y_movement_prob = random.randrange(0, 10)
+    x_movement_prob = randint(0, 10)
+    y_movement_prob = randint(0, 10)
     x_adjustment = 0
     y_adjustment = 0
     if x_movement_prob < 3:
@@ -184,7 +185,17 @@ def draw_surfer():
     #screen.jpg_pos("surfer.jpg", 120+surfer_position_x*5, 120-surfer_position_y*5) 
 
 def draw_wave():
-    pass
+    global wave_position_base_x, wave_position_offset_x
+    new_offset = randint(-5, 5)
+    if wave_position_offset_x + new_offset < -wave_position_base_x:
+        # Cannot be further left than maximum offset!
+        wave_position_offset_x = -wave_position_base_x
+    if wave_position_offset_x + new_offset > 2*wave_position_base_x:
+        # Cannot be further right than maximum offset!
+        wave_position_offset_x = 2*wave_position_base_x
+    else:
+        wave_position_offset_x += new_offset
+    screen.jpg_pos("img/wave_small.jpg",wave_position_base_x+wave_position_offset_x, 130)
     #screen.jpg("wave2d_dummy.jpg")
 
 def handle_jump(key):
