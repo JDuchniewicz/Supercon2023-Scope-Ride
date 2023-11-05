@@ -36,6 +36,11 @@ surfing_music = music(surfing_song, pins=[machine.Pin(26)])
 
 exit_flag=False
 
+import gc
+import os
+import machine
+
+
 def text_overlay():
     screen.text(80,25,"Szymon")
     screen.text(40,160,"Duchniewicz")
@@ -165,6 +170,12 @@ async def vos_main():
         # draw from back to front
         draw_wave()
         draw_surfer()
+        s = os.statvfs('/')
+        print(f"Free storage: {s[0]*s[3]/1024} KB")
+        print(f"Memory: {gc.mem_alloc()} of {gc.mem_free()} bytes used.")
+        #gc.collect()
+        #print(f"After GC collect Memory: {gc.mem_alloc()} of {gc.mem_free()} bytes used.")
+        print(f"CPU Freq: {machine.freq()/1000000}Mhz")
         #buzzer_gpio.on()
         if lost_life:
             sad_trumpet_music.tick()
