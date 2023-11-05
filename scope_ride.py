@@ -5,8 +5,12 @@ import keyleds
 import vectoros
 import gc
 import asyncio
+#from img_bitmaps import SURFER_BITMAP
+import surfer_bitmap
+import wave_bitmap
+import framebuf
 
-screen=screennorm.ScreenNorm() 
+screen: screennorm.ScreenNorm =screennorm.ScreenNorm() 
 
 # some globals for game state
 surfer_position_x=0
@@ -27,6 +31,8 @@ buzzer_enabler = machine.Pin(22, machine.Pin.OUT, 1)
 surfing_music = music(surfing_song, pins=[machine.Pin(26)])
 #sad_trumpet_music
 #buzzer_gpio = machine.Pin(26, machine.Pin.OUT)
+#wave_frame_bitmap = framebuf.FrameBuffer(wave_bitmap.BITMAP, wave_bitmap.WIDTH, wave_bitmap.HEIGHT, framebuf.GS2_HMSB)
+#surfer_frame_bitmap = framebuf.FrameBuffer(surfer_bitmap.BITMAP, surfer_bitmap.WIDTH, surfer_bitmap.HEIGHT, framebuf.GS8)
 
 exit_flag=False
 
@@ -35,7 +41,12 @@ def text_overlay():
     screen.text(40,160,"Duchniewicz")
 
 def back(key):
-    screen.jpg("wave2d_dummy.jpg")#("bluemarble.jpg")   # button A globe
+    print(gc.mem_free())
+    gc.collect()
+    print(gc.mem_free())
+    screen.tft.pbitmap(wave_bitmap,0,0)
+    #screen.tft.bitmap(wave_bitmap,0,0)
+    #screen.jpg("wave2d_dummy.jpg")#("bluemarble.jpg")   # button A globe
     #screen.jpg("sticky_piston_studios_logo.jpg")#("bluemarble.jpg")   # button A globe
     #text_overlay()
     
@@ -84,7 +95,9 @@ def draw_bg():
 def draw_surfer():
     # draw the surfer in the middle of the screen adjusted by their position
     print("Drawing the surfer")
-    screen.jpg_pos("surfer.jpg", 120+surfer_position_x*5, 120-surfer_position_y*5) 
+    screen.tft.bitmap(surfer_bitmap, 120+surfer_position_x*5, 120-surfer_position_y*5)
+    #screen.tft.bitmap(SURFER_BITMAP, 120+surfer_position_x*5, 120-surfer_position_y*5)
+    #screen.jpg_pos("surfer.jpg", 120+surfer_position_x*5, 120-surfer_position_y*5) 
 
 def draw_wave():
     screen.jpg("wave2d_dummy.jpg")
