@@ -183,7 +183,8 @@ def draw_surfer():
     #screen.jpg_pos("surfer.jpg", 120+surfer_position_x*5, 120-surfer_position_y*5) 
 
 def draw_wave():
-    screen.jpg("wave2d_dummy.jpg")
+    pass
+    #screen.jpg("wave2d_dummy.jpg")
 
 def handle_jump(key):
     print("Pressed jump")
